@@ -198,6 +198,15 @@ def status():
         "status":  "ok" if db_ok else "degraded",
     }), 200 if db_ok else 503
 
+# DEMO ANTES DE CONECTAR A LA BASE DE DATOS 
+@app.route("/alumnos/demo")
+def demo():
+    alumnos_fake = [
+        {"id": 1, "nombre": "Ana García", "correo": "ana@ufv.es"},
+        {"id": 2, "nombre": "Carlos López", "correo": "carlos@ufv.es"},
+        {"id": 3, "nombre": "Marta Pérez", "correo": "marta@ufv.es"},
+    ]
+    return render_template("index.html", alumnos=alumnos_fake)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)

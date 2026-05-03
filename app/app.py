@@ -13,13 +13,13 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-app = Flask(__name__, template_folder="templates", static_folder="static")
+app = Flask(__name__, template_folder="../templates", static_folder="../static")
 
 # ─── Configuración ────────────────────────────────────────────────────────────
 DB_CONFIG = {
     "host":     os.environ.get("DB_HOST", "10.0.1.20"),   # IP privada del DB Server
     "port":     int(os.environ.get("DB_PORT", 5432)),
-    "dbname":   os.environ.get("DB_NAME", "universidad"),
+    "dbname":   os.environ.get("DB_NAME", "universidad"),#
     "user":     os.environ.get("DB_USER", "alumno_user"),
     "password": os.environ.get("DB_PASSWORD", ""),
 }

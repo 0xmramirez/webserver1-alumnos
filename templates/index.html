@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Alumnos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Alumnos</h1>
+  <h2>Listado de alumnos registrados</h2>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for alumno in alumnos %}
+      <tr>
+        <td style="color:var(--muted); font-family:var(--mono); font-size:.8rem;">{{ alumno.id }}</td>
+        <td><strong>{{ alumno.nombre }}</strong></td>
+        <td style="color:var(--muted); font-size:.875rem;">{{ alumno.correo }}</td>
+        <td>
+          <a href="/alumnos/{{ alumno.id }}" class="btn btn-outline" style="padding:.35rem .75rem; font-size:.8rem;">Ver perfil</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center; color:var(--muted); padding:2rem;">
+          No hay alumnos registrados.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

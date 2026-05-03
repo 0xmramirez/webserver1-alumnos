@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Archivos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/alumnos/">Alumnos</a> /
+    <a href="/alumnos/{{ alumno_id }}">Perfil</a> /
+    Archivos
+  </div>
+  <h1>Mis archivos</h1>
+  <h2>Almacenamiento en S3</h2>
+</div>
+
+{% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div class="card" style="margin-bottom:1.25rem;">
+  <strong style="display:block; margin-bottom:1rem;">Subir archivo</strong>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Archivo</label>
+      <input type="file" name="archivo" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Subir a S3</button>
+  </form>
+</div>
+
+<div class="card">
+  <strong style="display:block; margin-bottom:1rem;">Archivos guardados</strong>
+  {% if archivos %}
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tamaño</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for archivo in archivos %}
+        <tr>
+          <td>{{ archivo.nombre }}</td>
+          <td style="color:var(--muted); font-size:.85rem;">{{ (archivo.size / 1024) | round(1) }} KB</td>
+          <td>
+            <a href="{{ archivo.url }}" target="_blank" class="btn btn-outline" style="padding:.3rem .7rem; font-size:.8rem;">
+              Descargar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="color:var(--muted); text-align:center; padding:1.5rem;">Sin archivos subidos.</p>
+  {% endif %}
+</div>
+
+<a href="/alumnos/{{ alumno_id }}" class="btn btn-outline">← Volver al perfil</a>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{{ alumno.nombre }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/alumnos/">Alumnos</a> / {{ alumno.nombre }}
+  </div>
+  <h1>{{ alumno.nombre }}</h1>
+  <h2>{{ alumno.correo }}</h2>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+  <div class="card" style="margin-bottom:0">
+    <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:.5rem;">Asignaturas inscritas</div>
+    <div style="font-size:2rem; font-weight:600;">{{ inscripciones | length }}</div>
+  </div>
+  <div class="card" style="margin-bottom:0">
+    <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:.5rem;">Media de notas</div>
+    <div style="font-size:2rem; font-weight:600;">
+      {% set notas_val = inscripciones | selectattr('nota') | map(attribute='nota') | list %}
+      {% if notas_val %}
+        {{ "%.1f"|format(notas_val | sum / notas_val | length) }}
+      {% else %}
+        —
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+    <strong>Inscripciones y notas</strong>
+    <a href="/alumnos/{{ alumno.id }}/inscribir" class="btn btn-primary">+ Inscribirse</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Asignatura</th>
+        <th>Fecha inscripción</th>
+        <th>Nota</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in inscripciones %}
+      <tr>
+        <td><strong>{{ i.asignatura }}</strong></td>
+        <td style="color:var(--muted); font-size:.85rem;">{{ i.fecha_inscripcion.strftime('%d/%m/%Y') if i.fecha_inscripcion else '—' }}</td>
+        <td>
+          {% if i.nota is not none %}
+            <span class="nota-chip {% if i.nota >= 7 %}nota-alta{% elif i.nota >= 5 %}nota-media{% else %}nota-baja{% endif %}">
+              {{ "%.1f"|format(i.nota) }}
+            </span>
+          {% else %}
+            <span class="nota-chip nota-sin">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if i.nota is none %}
+            <span class="badge badge-gray">Pendiente</span>
+          {% elif i.nota >= 5 %}
+            <span class="badge badge-green">Aprobado</span>
+          {% else %}
+            <span class="badge badge-red">Suspenso</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center; color:var(--muted); padding:1.5rem;">
+          Sin inscripciones. <a href="/alumnos/{{ alumno.id }}/inscribir" style="color:var(--accent);">Inscribirse ahora</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div style="display:flex; gap:.75rem;">
+  <a href="/alumnos/{{ alumno.id }}/archivos" class="btn btn-outline">Mis archivos (S3)</a>
+  <a href="/alumnos/" class="btn btn-outline">← Volver</a>
+</div>
+{% endblock %}

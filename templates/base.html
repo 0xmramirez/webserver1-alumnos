@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Portal Alumnos{% endblock %} — UFV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --bg2:       #181c25;
+      --bg3:       #1e2330;
+      --border:    #2a2f3e;
+      --accent:    #4f7cff;
+      --accent2:   #7c5cff;
+      --green:     #3ecf8e;
+      --red:       #f87171;
+      --amber:     #fbbf24;
+      --text:      #e8eaf0;
+      --muted:     #8891a8;
+      --card-r:    12px;
+      --font:      'DM Sans', sans-serif;
+      --mono:      'DM Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,17,23,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    .nav-brand {
+      font-size: .75rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .nav-brand span { color: var(--accent); }
+    nav a {
+      color: var(--muted); text-decoration: none; font-size: .9rem;
+      transition: color .15s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* ── Layout ── */
+    main { max-width: 1080px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    h1 { font-size: 1.65rem; font-weight: 600; margin-bottom: .4rem; }
+    h2 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem; color: var(--muted); }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--card-r);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: .2rem .6rem;
+      border-radius: 99px;
+      font-size: .75rem;
+      font-weight: 500;
+    }
+    .badge-blue  { background: rgba(79,124,255,.15); color: #7fa8ff; border: 1px solid rgba(79,124,255,.3); }
+    .badge-green { background: rgba(62,207,142,.12); color: #52d49e; border: 1px solid rgba(62,207,142,.25); }
+    .badge-red   { background: rgba(248,113,113,.1);  color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+    .badge-gray  { background: rgba(136,145,168,.1);  color: var(--muted); border: 1px solid var(--border); }
+
+    /* ── Tabla ── */
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: .75rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--muted); font-weight: 500;
+      padding: .75rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: .85rem 1rem;
+      border-bottom: 1px solid rgba(42,47,62,.6);
+      font-size: .9rem;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+
+    /* ── Botones ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .5rem 1.1rem;
+      border-radius: 8px;
+      font-family: var(--font); font-size: .875rem; font-weight: 500;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: all .15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #3d6cf5; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Forms ── */
+    .form-group { margin-bottom: 1.1rem; }
+    label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: .35rem; }
+    select, input[type="file"] {
+      width: 100%; padding: .6rem .9rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-family: var(--font);
+      font-size: .9rem;
+    }
+    select:focus, input[type="file"]:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,124,255,.15);
+    }
+
+    /* ── Nota visual ── */
+    .nota-chip {
+      display: inline-block; width: 48px; text-align: center;
+      padding: .2rem 0; border-radius: 6px;
+      font-family: var(--mono); font-size: .85rem; font-weight: 500;
+    }
+    .nota-alta  { background: rgba(62,207,142,.15); color: #52d49e; }
+    .nota-media { background: rgba(251,191,36,.12);  color: var(--amber); }
+    .nota-baja  { background: rgba(248,113,113,.12); color: var(--red); }
+    .nota-sin   { background: rgba(136,145,168,.1);  color: var(--muted); }
+
+    /* ── Alerts ── */
+    .alert {
+      padding: .75rem 1rem; border-radius: 8px;
+      font-size: .875rem; margin-bottom: 1rem;
+    }
+    .alert-error { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.2); color: var(--red); }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 2rem; }
+    .page-header .breadcrumb {
+      font-size: .8rem; color: var(--muted); margin-bottom: .5rem;
+    }
+    .page-header .breadcrumb a { color: var(--accent); text-decoration: none; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">
+      <span>◆</span> Portal <span>Alumnos</span>
+    </div>
+    <a href="/alumnos/">Inicio</a>
+    <a href="/health" style="margin-left:auto; font-size:.8rem;">Estado</a>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

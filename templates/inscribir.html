@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Inscribirse{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="breadcrumb">
+    <a href="/alumnos/">Alumnos</a> /
+    <a href="/alumnos/{{ alumno_id }}">Perfil</a> /
+    Inscribirse
+  </div>
+  <h1>Inscripción en asignatura</h1>
+  <h2>Selecciona una asignatura disponible</h2>
+</div>
+
+{% if error %}
+  <div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<div class="card">
+  {% if disponibles %}
+    <form method="POST" action="/alumnos/{{ alumno_id }}/inscribir">
+      <div class="form-group">
+        <label for="asignatura_id">Asignatura</label>
+        <select name="asignatura_id" id="asignatura_id" required>
+          <option value="" disabled selected>Selecciona una asignatura…</option>
+          {% for a in disponibles %}
+          <option value="{{ a.id }}">{{ a.nombre }}{% if a.descripcion %} — {{ a.descripcion }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:flex; gap:.75rem; margin-top:1.5rem;">
+        <button type="submit" class="btn btn-primary">Confirmar inscripción</button>
+        <a href="/alumnos/{{ alumno_id }}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  {% else %}
+    <p style="color:var(--muted); text-align:center; padding:2rem;">
+      Ya estás inscrito en todas las asignaturas disponibles.
+    </p>
+    <div style="text-align:center; margin-top:.75rem;">
+      <a href="/alumnos/{{ alumno_id }}" class="btn btn-outline">← Volver al perfil</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -108,7 +108,7 @@ def inscribir(alumno_id):
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             # Asignaturas disponibles (no inscritas aún)
             cur.execute("""
-                SELECT id, nombre, descripcion
+                SELECT id, nombre, guia_docente_url AS descripcion
                 FROM   asignaturas
                 WHERE  id NOT IN (
                     SELECT id_asignatura FROM inscripciones WHERE id_alumno = %s

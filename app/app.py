@@ -48,7 +48,7 @@ def index():
     conn = get_db()
     try:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-            cur.execute("SELECT id, nombre, correo FROM alumnos ORDER BY nombre;")
+            cur.execute("SELECT id, nombre || ' ' || apellido1 AS nombre, correo FROM alumnos ORDER BY nombre;")
             alumnos = cur.fetchall()
         return render_template("index.html", alumnos=alumnos)
     finally:
@@ -69,11 +69,11 @@ def perfil_alumno(alumno_id):
 
             # Notas: inscripciones con nota
             cur.execute("""
-                SELECT i.id, a.nombre AS asignatura, i.nota, i.fecha_inscripcion
+                SELECT a.nombre AS asignatura, i.nota_final AS nota, i.fecha_realizacion AS fecha_inscripcion
                 FROM   inscripciones i
-                JOIN   asignaturas   a ON a.id = i.asignatura_id
-                WHERE  i.alumno_id = %s
-                ORDER  BY i.fecha_inscripcion DESC;
+                JOIN   asignaturas   a ON a.id = i.id_asignatura
+                WHERE  i.id_alumno = %s
+                ORDER  BY i.fecha_realizacion DESC;
             """, (alumno_id,))
             inscripciones = cur.fetchall()
 
@@ -111,9 +111,8 @@ def inscribir(alumno_id):
                 SELECT id, nombre, descripcion
                 FROM   asignaturas
                 WHERE  id NOT IN (
-                    SELECT asignatura_id FROM inscripciones WHERE alumno_id = %s
+                    SELECT id_asignatura FROM inscripciones WHERE id_alumno = %s
                 )
-                ORDER  BY nombre;
             """, (alumno_id,))
             disponibles = cur.fetchall()
 
@@ -125,8 +124,8 @@ def inscribir(alumno_id):
                                            disponibles=disponibles,
                                            error="Selecciona una asignatura.")
                 cur.execute("""
-                    INSERT INTO inscripciones (alumno_id, asignatura_id, fecha_inscripcion)
-                    VALUES (%s, %s, NOW())
+                    INSERT INTO inscripciones (id_alumno, id_asignatura, fecha_realizacion, curso_academico)
+                    VALUES (%s, %s, NOW(), '2025-2026')
                     ON CONFLICT DO NOTHING;
                 """, (alumno_id, asignatura_id))
                 conn.commit()
